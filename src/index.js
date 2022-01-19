@@ -1,9 +1,10 @@
-const { parse } = require("./nl");
+const { parse, combineSteps } = require("./nl");
+const { convertData } = require("./data");
 const { fetchData } = require("./api");
 
-const download = (dataurl, filename) => {
+const download = (data, filename) => {
   const a = document.createElement("a");
-  a.href = dataurl;
+  a.href = `data:text/plain,${data}`;
   a.setAttribute("download", filename);
   a.click();
 };
@@ -15,10 +16,12 @@ fetchData().then(
       Details: { WorkoutName },
     },
   }) => {
-    const [, ...parsedSteps] = intervalData.map(parse);
+    const convertedData = convertData(intervalData);
 
-    const stepList = "- " + parsedSteps.join("%0D%0A- ");
+    const stepsAsNl = convertedData.map(parse);
 
-    download(`data:text/plain,${stepList}`, `${WorkoutName}.txt`);
+    const stepsAsText = combineSteps(stepsAsNl);
+
+    download(stepsAsText, `${WorkoutName}.txt`);
   }
 );

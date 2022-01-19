@@ -4,15 +4,27 @@ const getTime = (start, end) => {
   return `${time}s`;
 };
 
-const getPower = (start) => {
-  return `${start}%`;
-};
+const getPower = (power) => `${power}%`;
 
-const parse = ({ Start, End, StartTargetPowerPercent }) => {
+const parse = ({
+  Start,
+  End,
+  StartTargetPowerPercent,
+  EndTargetPowerPercent,
+}) => {
   const time = getTime(Start, End);
-  const power = getPower(StartTargetPowerPercent);
+  const start = getPower(StartTargetPowerPercent);
+  let asString;
 
-  return `${time} ${power}`;
+  if (EndTargetPowerPercent) {
+    asString = `Ramp ${start}-${getPower(EndTargetPowerPercent)} ${time}`;
+  } else {
+    asString = `${time} ${start}`;
+  }
+
+  return asString;
 };
 
-module.exports = { parse };
+const combineSteps = (steps) => "- " + steps.join("%0D%0A- ");
+
+module.exports = { parse, combineSteps };
