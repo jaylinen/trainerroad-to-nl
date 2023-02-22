@@ -6,7 +6,7 @@ const convertData = (data) => {
     const nextItem = data[i + 1];
     const firstItem = data[0];
 
-    const parsedItem = { item };
+    const parsedItem = { ...item };
 
     if (previousItem) {
       if (
